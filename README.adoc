@@ -1,0 +1,29 @@
+= openapi2markup-cli
+Command line interface (CLI) for OpenAPI2Markup
+
+== Overview
+
+This is a CLI for https://github.com/Swagger2Markup/swagger2markup[Swagger2Markup].
+It converts a Swagger V3 JSON or YAML file into several AsciiDoc or GitHub Flavored Markdown documents which can be combined with hand-written documentation. The Swagger source file can be located locally or remotely via HTTP. OpenAPI2Markup supports the Swagger 3.0 specification, i.e., OpenAPI 3.0.
+
+== Quick usage
+You can clone and build the jar, then use this CLI to generate asciidocs.
+    
+    gradle assemble
+    java -jar ./build/libs/openapi2markup-cli-X.X.X.jar convert -i the_swagger_3.0_file.json -d /the/path/to/output
+
+That's all! Then you can checkout http://asciidoctor.org/, find your way to to play with asciidocs.
+
+== Reference documentation
+
+The documentation can be found at https://github.com/Swagger2Markup/swagger2markup#reference-documentation[Reference documentation]
+
+== License
+
+Copyright 2021 Che-Hung Lin
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

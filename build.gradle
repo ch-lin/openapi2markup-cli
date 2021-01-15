@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.0.0"
+        //classpath "com.gradle.publish:plugin-publish-plugin:0.9.0"
+    }
+}
+
+group 'org.c6.openapi2markup'
+version '1.0.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.jfrog.artifactory'
+apply from:   'gradle/publishing.gradle'
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
+    options.deprecation = true
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
+}
+
+dependencies {
+    compile ('io.github.swagger2markup:swagger2markup:2.0.0-SNAPSHOT')
+    compile 'io.airlift:airline:0.7'
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'io.github.swagger2markup:openapi2markup:2.0.0-SNAPSHOT'
+    compile 'io.github.swagger2markup:swagger2markup-asciidoc:2.0.0-SNAPSHOT'
+    compile 'io.swagger.core.v3:swagger-models:2.1.6'
+    compile 'io.swagger.parser.v3:swagger-parser:2.0.24'
+    compile 'org.asciidoctor:asciidoctorj-api:2.4.2'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '5.6.3'
+}
+
+task runJar(dependsOn:jar) << {
+    String swaggerInput = file("src/test/resources/swagger_petstore.yaml").getAbsolutePath()
+    javaexec { main="-jar"; args = [jar.archivePath, 'convert', '-i', "${swaggerInput}", '-d', "${buildDir}"]}
+}
